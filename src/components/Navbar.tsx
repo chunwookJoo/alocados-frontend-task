@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
-import { Link } from "react-router-dom";
-import { ROUTES } from "../utils/constants/routes";
+import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
+import { NAVBAR_ITEM } from "../utils/constants/navbarItem";
 
 const Navbar = () => {
   return (
@@ -9,8 +9,11 @@ const Navbar = () => {
       <NavbarRow>
         <Logo />
         <NavbarRow>
-          <Link to={ROUTES.EXCHANGE_PAGE}>환전하기</Link>
-          <Link to={ROUTES.EXCHANGE_HISTORY_PAGE}>거래내역</Link>
+          {NAVBAR_ITEM.map(({ id, toLink, name }) => (
+            <StyledLink key={id} to={toLink}>
+              {name}
+            </StyledLink>
+          ))}
         </NavbarRow>
       </NavbarRow>
     </NavbarLayout>
@@ -20,12 +23,20 @@ const Navbar = () => {
 export default Navbar;
 
 const NavbarLayout = styled.nav`
-  width: 100%;
-  max-width: 1920px;
+  max-width: 1560px;
   margin: 0 auto;
+  padding: 2rem;
 `;
 
 const NavbarRow = styled.div`
   display: flex;
+  gap: 1rem;
   justify-content: space-between;
+`;
+
+const StyledLink = styled(NavLink)`
+  text-decoration: none;
+  &.active {
+    font-weight: bold;
+  }
 `;
