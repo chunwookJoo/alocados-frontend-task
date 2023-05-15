@@ -1,35 +1,108 @@
-import { useState } from "react";
-import Input from "./element/Input";
+import { useEffect, useState } from "react";
+import ToInput from "./element/ToInput";
+import FromInput from "./element/FromInput";
 import Select from "./element/Select";
+import Button from "./Button";
+import { exchangeHandler } from "../utils/exchange";
+import { useRecoilState } from "recoil";
+import { coinBalanceState } from "../atom/recoilCoinState";
+import { checkedBalance, checkedSelect } from "../utils/invalid";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { ExchangedState } from "../types/coin";
+import Exchanged from "./element/Exchanged";
+import { FlexRow } from "../styles/Flex";
+import { styled } from "styled-components";
 
 const ExchangeForm = () => {
-  const [fromCount, setFromCount] = useState("");
+  const [fromCount, setFromCount] = useState(0);
   const [fromSelect, setFromSelect] = useState("");
-  const [toCount, setToCount] = useState("");
+  const [toCount, setToCount] = useState(0);
   const [toSelect, setToSelect] = useState("");
 
-  console.log(fromCount, toCount);
-  console.log(fromSelect, toSelect);
+  const [disabled, setDisabled] = useState(true);
+
+  const [coinState, setCoinState] = useRecoilState(coinBalanceState);
+  const [getValue, setValue] = useLocalStorage("exchange-history", []);
+  const recentExchanged = getValue[getValue.length - 1];
+
+  useEffect(() => {
+    if (
+      checkedSelect(fromCount, fromSelect, toSelect) &&
+      checkedBalance(fromCount, fromSelect, coinState)
+    ) {
+      const exchangeRate = exchangeHandler(fromSelect, toSelect, fromCount);
+      if (exchangeRate) {
+        setToCount(exchangeRate);
+        setDisabled(false);
+        return;
+      }
+    } else {
+      setDisabled(true);
+      setToCount(0);
+      return;
+    }
+  }, [fromSelect, toSelect, fromCount]);
+
+  const onClickExchange = () => {
+    setCoinState({
+      ...coinState,
+      [fromSelect]: coinState[fromSelect] - fromCount,
+      [toSelect]: coinState[toSelect] + toCount,
+    });
+
+    const exchangeObject: ExchangedState = {
+      exchangedDate: new Date().toLocaleString(),
+      fromCount,
+      fromSelect,
+      toCount,
+      toSelect,
+    };
+
+    setValue([...getValue, exchangeObject]);
+
+    setFromCount(0);
+    setToCount(0);
+    setFromSelect("");
+    setToSelect("");
+  };
 
   return (
-    <div>
-      <Input
-        inputType="string"
-        inputId="fromCount"
-        labelText="전환 수량 (FROM)"
-        setInputData={setFromCount}
-      />
-      <Select selectState={[fromSelect, setFromSelect]} />
-      <Input
-        inputType="string"
-        inputId="toCount"
-        labelText="전환 수량 (TO)"
-        readOnly={true}
-        inputData={parseInt(fromCount) * 2}
-      />
-      <Select selectState={[toSelect, setToSelect]} />
-    </div>
+    <ExchangeFormStyle>
+      <FlexRow style={{ marginBottom: "1rem" }}>
+        <FromInput
+          inputType="text"
+          inputId="fromCount"
+          labelText="전환 수량 (FROM)"
+          placeholder="전환할 수량을 입력하세요."
+          inputState={[fromCount, setFromCount]}
+        />
+        <Select selectState={[fromSelect, setFromSelect]} />
+      </FlexRow>
+      <FlexRow style={{ marginBottom: "1rem" }}>
+        <ToInput
+          inputType="text"
+          inputId="fromCount"
+          labelText="전환 수량 (TO)"
+          readOnly={true}
+          inputData={toCount}
+        />
+        <Select selectState={[toSelect, setToSelect]} />
+      </FlexRow>
+      <div>
+        <Button
+          text="환전"
+          onClick={onClickExchange}
+          color={disabled ? "gray" : "cobalt"}
+          disabled={disabled}
+        />
+      </div>
+      {!!getValue.length && <Exchanged exchangedList={recentExchanged} />}
+    </ExchangeFormStyle>
   );
 };
 
 export default ExchangeForm;
+
+const ExchangeFormStyle = styled.div`
+  flex: 3;
+`;
