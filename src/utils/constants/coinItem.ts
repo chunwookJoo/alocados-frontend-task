@@ -1,19 +1,45 @@
-import { CoinItem } from "../../types/coin";
+import { CoinRatio } from "../../types/coin";
 
-export const COIN_ITEM: CoinItem[] = [
+export const SELECT_COIN_ITEM = [
   {
-    id: "1",
+    id: 0,
+    value: "",
+    name: "코인을 선택하세요.",
+  },
+  {
+    id: 1,
+    value: "Solana",
     name: "Solana",
-    balance: 0,
+    unit: "SOL",
   },
   {
-    id: "2",
+    id: 2,
+    value: "Ethereum",
     name: "Ethereum",
-    balance: 0,
+    unit: "ETH",
   },
   {
-    id: "3",
+    id: 3,
+    value: "BnB",
     name: "BnB",
-    balance: 0,
+    unit: "BNB",
   },
 ];
+
+export const COIN_RATIO: CoinRatio = {
+  Ethereum: {
+    Ethereum: 1,
+    Solana: 100,
+    BnB: 50,
+  },
+  Solana: {
+    Ethereum: 0.01,
+    Solana: 1,
+    BnB: 0.5,
+  },
+  BnB: {
+    Ethereum: 0.02,
+    Solana: 2,
+    BnB: 1,
+  },
+};

@@ -3,6 +3,7 @@ import { PageLayout } from "../styles/Layouts";
 import Balance from "../components/Balance";
 import PageTitle from "../components/PageTitle";
 import ExchangeForm from "../components/ExchangeForm";
+import { FlexRow } from "../styles/Flex";
 
 const ExchangePage = () => {
   return (
@@ -17,8 +18,3 @@ const ExchangePage = () => {
 };
 
 export default ExchangePage;
-
-const FlexRow = styled.div`
-  display: flex;
-  gap: 1rem;
-`;
