@@ -1,4 +1,3 @@
-import { styled } from "styled-components";
 import { PageLayout } from "../styles/Layouts";
 import Balance from "../components/Balance";
 import PageTitle from "../components/PageTitle";

@@ -12,9 +12,11 @@ import { ExchangedState } from "../types/coin";
 import Exchanged from "./element/Exchanged";
 import { FlexRow } from "../styles/Flex";
 import { styled } from "styled-components";
+import { getFormatDate, getFormatTime } from "../utils/format";
+import { v4 as uuidv4 } from "uuid";
 
 const ExchangeForm = () => {
-  const [fromCount, setFromCount] = useState(0);
+  const [fromCount, setFromCount] = useState("");
   const [fromSelect, setFromSelect] = useState("");
   const [toCount, setToCount] = useState(0);
   const [toSelect, setToSelect] = useState("");
@@ -23,7 +25,7 @@ const ExchangeForm = () => {
 
   const [coinState, setCoinState] = useRecoilState(coinBalanceState);
   const [getValue, setValue] = useLocalStorage("exchange-history", []);
-  const recentExchanged = getValue[getValue.length - 1];
+  const recentExchanged = getValue[0];
 
   useEffect(() => {
     if (
@@ -46,21 +48,25 @@ const ExchangeForm = () => {
   const onClickExchange = () => {
     setCoinState({
       ...coinState,
-      [fromSelect]: coinState[fromSelect] - fromCount,
+      [fromSelect]: coinState[fromSelect] - Number(fromCount),
       [toSelect]: coinState[toSelect] + toCount,
     });
 
+    const nowDate = getFormatDate(new Date());
+    const nowTime = getFormatTime(new Date());
+
     const exchangeObject: ExchangedState = {
-      exchangedDate: new Date().toLocaleString(),
+      id: uuidv4(),
+      exchangedDate: `${nowDate}, ${nowTime}`,
       fromCount,
       fromSelect,
       toCount,
       toSelect,
     };
 
-    setValue([...getValue, exchangeObject]);
+    setValue([exchangeObject, ...getValue]);
 
-    setFromCount(0);
+    setFromCount("");
     setToCount(0);
     setFromSelect("");
     setToSelect("");

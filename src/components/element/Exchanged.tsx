@@ -13,13 +13,15 @@ const Exchanged = (props: { exchangedList: ExchangedState }) => {
     Solana: "SOL",
     BnB: "BNB",
   };
+
   return (
     <FormBackground style={{ padding: "12px", marginBottom: "1rem" }}>
       <FlexRow style={{ justifyContent: "space-between" }}>
         <DateStyle>{exchangedDate}</DateStyle>
         <FlexRow>
           <span style={{ fontWeight: "bold" }}>
-            {getFormatDigits(fromCount, 2)} {fromSelect && unit[fromSelect]}
+            {getFormatDigits(Number(fromCount), 2)}{" "}
+            {fromSelect && unit[fromSelect]}
           </span>
           {">"}
           <span style={{ fontWeight: "bold" }}>
@@ -33,6 +35,6 @@ const Exchanged = (props: { exchangedList: ExchangedState }) => {
 
 export default Exchanged;
 
-const DateStyle = styled.small`
+const DateStyle = styled.span`
   font-size: 14px;
 `;

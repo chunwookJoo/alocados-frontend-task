@@ -1,8 +1,8 @@
-import React, { ReactEventHandler } from "react";
+import React, { useState } from "react";
 import { FromInputPropsType } from "../../types/input";
-import { getFormatDigits } from "../../utils/format";
 import { FormBackground, InputStyle } from "../../styles/Form";
 import { FlexCol } from "../../styles/Flex";
+import { CHECK_ZERO_REGEX, INPUT_REGEX } from "../../utils/constants/regex";
 
 const FromInput = ({
   inputType,
@@ -12,17 +12,29 @@ const FromInput = ({
   inputState,
 }: FromInputPropsType) => {
   const [inputData, setInputData] = inputState;
+  const [warning, setWarning] = useState(false);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setInputData(Number(value));
-    // const inputCheck = /^[0-9.]/.test(value);
-    // if (inputCheck) {
-    //   setInputData(value);
-    // }
+
+    const inputCheck = INPUT_REGEX.test(value);
+    const inputCheckZero = CHECK_ZERO_REGEX.test(value);
+
+    if (inputCheck) setInputData(value);
+    if (inputCheckZero) {
+      setWarning(true);
+    } else {
+      setWarning(false);
+    }
   };
   return (
-    <FormBackground style={{ flex: 1, padding: "6px" }}>
+    <FormBackground
+      style={{
+        flex: 1,
+        padding: "6px",
+        border: warning ? "1px solid red" : "",
+      }}
+    >
       <FlexCol>
         <label style={{ fontSize: "12px" }} htmlFor={inputId}>
           {labelText}
@@ -31,8 +43,8 @@ const FromInput = ({
           type={inputType}
           id={inputId}
           placeholder={placeholder}
-          onChange={(e) => onChangeInput(e)}
-          value={Number(inputData)}
+          onChange={onChangeInput}
+          value={inputData}
         />
       </FlexCol>
     </FormBackground>

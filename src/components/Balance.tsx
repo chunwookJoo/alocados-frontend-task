@@ -3,17 +3,9 @@ import { SELECT_COIN_ITEM } from "../utils/constants/coinItem";
 import { getFormatDigits } from "../utils/format";
 import { useRecoilValue } from "recoil";
 import { coinBalanceState } from "../atom/recoilCoinState";
-import { useEffect } from "react";
-import useLocalStorage from "../hooks/useLocalStorage";
-import { FormBackground } from "../styles/Form";
 
 const Balance = () => {
   const getCoinBalance = useRecoilValue(coinBalanceState);
-  // const [getValue, _] = useLocalStorage("cointState", getCoinBalance);
-
-  // useEffect(() => {
-  //   setValue(getCoinBalance);
-  // }, []);
 
   return (
     <AsideStyle>
@@ -27,7 +19,7 @@ const Balance = () => {
                 <div>{name}</div>
                 <div>
                   <SpanStyle>
-                    {getFormatDigits(getCoinBalance[name], 10)} {unit}
+                    {getFormatDigits(getCoinBalance[name], 2)} {unit}
                   </SpanStyle>
                 </div>
               </LiStyle>
