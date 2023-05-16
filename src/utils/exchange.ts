@@ -1,11 +1,11 @@
 import { COIN_RATIO } from "./constants/coinItem";
 
 export const exchangeHandler = (
-  fromCoin: string,
-  toCoin: string,
-  fromCount: number | null
+  fromSelect: string,
+  toSelect: string,
+  fromCount: string | null
 ) => {
-  if (fromCoin === "" || toCoin === "") return;
-  const exchangeRate = COIN_RATIO[fromCoin][toCoin];
+  if (fromSelect === "" || toSelect === "") return;
+  const exchangeRate = COIN_RATIO[fromSelect][toSelect];
   return exchangeRate * Number(fromCount);
 };

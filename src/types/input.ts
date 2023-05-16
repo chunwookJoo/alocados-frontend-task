@@ -3,7 +3,7 @@ export type FromInputPropsType = {
   inputId: string;
   labelText: string;
   placeholder: string;
-  inputState: [number | null, React.Dispatch<React.SetStateAction<number>>];
+  inputState: [string, React.Dispatch<React.SetStateAction<string>>];
 };
 
 export type ToInputPropsType = {

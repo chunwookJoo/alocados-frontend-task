@@ -1,16 +1,16 @@
 import { CoinBalanceState } from "../types/coin";
 
 export const checkedBalance = (
-  fromCount: number,
+  fromCount: string,
   fromSelect: string,
   coinState: CoinBalanceState
 ) => {
-  if (coinState[fromSelect] >= fromCount) return true;
+  if (Number(coinState[fromSelect]) >= Number(fromCount)) return true;
   return false;
 };
 
 export const checkedSelect = (
-  fromCount: number,
+  fromCount: string | number,
   fromSelect: string,
   toSelect: string
 ) => {

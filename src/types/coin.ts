@@ -9,8 +9,9 @@ export type CoinBalanceState = {
 };
 
 export type ExchangedState = {
+  id: string;
   exchangedDate: string;
-  fromCount: number;
+  fromCount: string;
   fromSelect?: string;
   toCount: number;
   toSelect?: string;
